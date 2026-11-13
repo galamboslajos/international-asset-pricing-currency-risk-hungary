@@ -1,0 +1,28 @@
+{
+  "description": "Original paper Figures 2-4 beside existing Hungarian estimates; USD, full S4, scalar11 and grouped21.",
+  "paper": "Antell and Vaihekoski (2007); supplied PDF body is the April 2005 draft, printed pages 16-17.",
+  "paper_sha256": "5e64d49721c9ca56aa5481f5905c65f83f6ef3af0d04edf4d28097ce290e837d",
+  "dataset_sha256": "78117c8baf1a370d70450626bc1aeb66ec8b27f7afefa4c80d296284f68efff5",
+  "Hungary_first": "2000-01",
+  "Hungary_last": "2026-09",
+  "images": [
+    {
+      "file": "S4_USD_figure_2.png",
+      "figure": 2,
+      "sha256": "65c52d44c93ab9d90d6a95a0363dd515b63e6a95c96fcc098bee5c37f759fd3a",
+      "source_output": "output/17_paper_chart_comparison/fixed_2026-11-13/S4_USD_figure_2.png"
+    },
+    {
+      "file": "S4_USD_figure_3.png",
+      "figure": 3,
+      "sha256": "5c24e3e3879ca070f4e5acb6d1b94a928abd2557c5feae9b33318d9bd796b2f6",
+      "source_output": "output/17_paper_chart_comparison/fixed_2026-11-13/S4_USD_figure_3.png"
+    },
+    {
+      "file": "S4_USD_figure_4.png",
+      "figure": 4,
+      "sha256": "67175695491a70d18239a4bf14de0eb18d5ff20e8bf1a6f8d8d2d6526fd875ed",
+      "source_output": "output/17_paper_chart_comparison/fixed_2026-11-13/S4_USD_figure_4.png"
+    }
+  ]
+}
