@@ -1,0 +1,8 @@
+# Miniconda base: verified with Python 3.13.12.
+numpy==2.4.4
+pandas==3.0.2
+requests==2.32.5
+matplotlib==3.10.8
+scipy==1.17.1
+statsmodels==0.15.0
+ipykernel==7.2.0
