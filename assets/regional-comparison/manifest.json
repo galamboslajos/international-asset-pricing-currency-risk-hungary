@@ -1,0 +1,31 @@
+{
+  "common_reference": "FX-only, free intercept, zero alphas",
+  "monthly_units": "log percentage points; average of monthly price times covariance",
+  "outputs": {
+    "01_unhedged_mean_comparison.png": "79c5fad052e2401f863a1799baa3dd9c068125b8e81ed3ad181d907c3306cc9b",
+    "01_unhedged_mean_comparison.svg": "95be08b171b48018acbaf292259e557498cf7ddcb0ef6442239135ebb2348366",
+    "02_unhedged_EUR_diagonal.png": "be97d6164dac728f1e65d335a3ed2e9b3a4c4302f61c4ba05b204b51e1930d0a",
+    "02_unhedged_EUR_diagonal.svg": "a3a41c7edc37b2de96cbb463c45dd41bd96a49099d3163dbcc48cda37e6ef3ce",
+    "02_unhedged_EUR_scalar.png": "ea092c68b86cdf5a8ea9753f01fdc286bd016725ed9836cc10915b5c70f92056",
+    "02_unhedged_EUR_scalar.svg": "a3daab27fc511c28d6295b759571a633c261e37f4bf0d0a8808170f85f40043f",
+    "02_unhedged_USD_diagonal.png": "c8ea220b8436f8e0eaa081d17e87344d106df1696b007289999be79bc9e08c3c",
+    "02_unhedged_USD_diagonal.svg": "d896ddcdf17295dc0f2225c9cf753763aa673d6698e1febaacb05a8264c163f5",
+    "02_unhedged_USD_scalar.png": "79cef5e4b95d8f547254c3d4577ae53990b4a53a8b752e30583dd1eafad6ea8d",
+    "02_unhedged_USD_scalar.svg": "69b87d22c25f5784a1c4fd577e01c2312f5290da912ad728134829c749658241",
+    "03_constant_price_benchmark.png": "f6e853c6f5ce31dc7491bfb7d8e7e15da95e9f90ba45425dfa16e70ace155706",
+    "03_constant_price_benchmark.svg": "007c2f6d74a7a5c4dcd1c2c5be87e0dbbb31f9420972bc0df3732bcc2010b812",
+    "FX_only_average_premiums.csv": "8c54374b704ab540c62ed593cd71ac3b01f8e367b1ca39e84f73e0faf7bd9f33",
+    "FX_only_monthly_premiums.csv": "fd9131230aefbcb5f0b215a5d7dd7f63ea3017aa845236b3b401b93f9a698e52",
+    "README.md": "b686555b7eca2526bcd4999510dedfefe5d512da7db71315a3077268e44c95c8",
+    "price_covariance_terms.csv": "efea2623ebfd5e178a1eb35fd37943f4d83d36d03383881677048d750e1c2791",
+    "regional_comparison.html": "bb8052cba858da94733fc859b80869142a82c28bdada2b45337f1046f8db5e47"
+  },
+  "sample": {
+    "first": "2014-10",
+    "last": "2026-09",
+    "months": 144
+  },
+  "synthesis_input_lock_sha256": "006a80daeea5b8fcd28361dd14c8b7ff0e78ce072ec4edba116f314b808fdef9",
+  "upstream_manifest_sha256": "48e8bc709ac5e2cd23c2f1516041eb2a417e5c44261f30a4e2356a8e72c6f5c9",
+  "viewer_cases": 140
+}

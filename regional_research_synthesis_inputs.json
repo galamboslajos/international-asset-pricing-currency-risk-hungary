@@ -1,0 +1,35 @@
+{
+  "countries": [
+    "HU",
+    "PL",
+    "CZ",
+    "RO",
+    "SE"
+  ],
+  "covariance_targeting": {
+    "manifest_sha256": "48e8bc709ac5e2cd23c2f1516041eb2a417e5c44261f30a4e2356a8e72c6f5c9",
+    "root": "output/31_regional_covariance_targeting/2014-10_2026-09/targets_f8aa2f50"
+  },
+  "covariances": [
+    "scalar",
+    "diagonal"
+  ],
+  "perspectives": [
+    "USD",
+    "EUR"
+  ],
+  "sample": {
+    "first": "2014-10",
+    "last": "2026-09",
+    "months": 144
+  },
+  "source_locks": {
+    "regional_dataset_inputs.json": "0ceeef569dc4513d8534faf346509b22245db7ebff63abeb77044fc1474be208",
+    "research_synthesis_inputs.json": "4fc2f36215746dd0ad0fef3ac41d8953f4abc6f1a3a36b526813437a26f081ee"
+  },
+  "synthesis_sources": {
+    "assets/regional-comparison/viewer_template.html": "fc7dabd4914a86a3e1890f4fdea26ad09a7dbbd76796b78df9858d8c901a5218",
+    "regional_comparison.py": "d320a96bf4cbc9dacccc411788c82ca40ca236263f96bb906f8ca66ff6cb5b6f"
+  },
+  "version": "regional_research_synthesis_v1"
+}

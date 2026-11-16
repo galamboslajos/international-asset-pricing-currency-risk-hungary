@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unhedged regional equity premiums</title>
+<style>
+:root{color-scheme:light dark;--bg:#fbfcfd;--fg:#202c3a;--muted:#526273;--line:#dbe2e8;--w:#3979ad;--n:#d38c27;--o:#319680;--l:#926bad}
+@media(prefers-color-scheme:dark){:root{--bg:#131b24;--fg:#e7edf4;--muted:#b4c1ce;--line:#354252;--w:#6aa9dc;--n:#e4b15a;--o:#66bda7;--l:#b498ce}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:1160px;margin:auto;padding:32px 24px 48px}h1{font-size:28px;font-weight:650;letter-spacing:-.025em;margin:0 0 5px}h2{font-size:20px;font-weight:600;margin:0 0 6px}p{margin:0}.muted{color:var(--muted);font-size:14px}
+.controls{display:flex;gap:16px;flex-wrap:wrap;margin:24px 0 16px}label{display:flex;flex-direction:column;gap:5px;font-size:14px;color:var(--muted)}select{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:5px;min-height:40px;padding:7px 10px;max-width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin:12px 0 4px;font-size:14px}.swatch{display:inline-block;width:16px;height:9px;margin-right:7px}.w{background:var(--w)}.n{background:var(--n)}.o{background:var(--o)}.l{background:var(--l)}
+svg{display:block;width:100%;height:auto;overflow:visible}svg text{font-family:inherit;fill:var(--muted);font-size:12px}svg .country{fill:var(--fg);font-size:14px}svg .axis{stroke:var(--line);stroke-width:1}svg .zero{stroke:var(--muted);stroke-width:1}
+.detail{font-size:14px;color:var(--muted);min-height:24px;margin:2px 0 8px}.section{margin-top:30px;border-top:1px solid var(--line);padding-top:24px}.row{display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap;margin:12px 0}.foot{font-size:13px;color:var(--muted);margin-top:18px}
+details{margin-top:18px}summary{cursor:pointer;color:var(--muted);font-size:14px}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:750px;font-size:13px;margin-top:10px}th,td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left}th{font-weight:550;color:var(--muted)}
+@media(max-width:640px){main{padding:20px 12px 32px}h1{font-size:24px}.controls{gap:12px}.controls label{flex:1 1 145px}select{font-size:16px;min-height:44px}.controls .spec{flex-basis:100%}.legend{gap:6px 14px;font-size:13px}}
+</style></head><body><main id="regional-app">
+<h1>Unhedged regional equity premiums</h1>
+<p class="muted">Hungary, Poland, Czechia, Romania and Sweden · October 2014–September 2026 · 144 matched months</p>
+<div class="controls">
+<label>Investor currency<select id="currency"><option>USD</option><option>EUR</option></select></label>
+<label>Covariance model<select id="covariance"><option value="scalar">Scalar BEKK</option><option value="diagonal">Diagonal BEKK</option></select></label>
+<label class="spec">Pricing specification<select id="model"></select></label>
+</div>
+<h2>Average premium contributions</h2>
+<p class="muted">Monthly log percentage points. Positive and negative contributions stack separately.</p>
+<div class="legend"><span><i class="swatch w"></i>World</span><span><i class="swatch n"></i>National FX</span><span><i class="swatch o"></i>Other FX</span><span><i class="swatch l"></i>Own local</span><span>◆ Fitted total</span><span>○ Observed mean excess return</span></div>
+<svg id="averages" role="img" aria-label="Average unhedged equity risk-premium contributions by country"></svg>
+<div id="bar-detail" class="detail"></div>
+<p id="availability" class="muted" aria-live="polite"></p>
+<details><summary>Exact average contributions</summary><div class="table-wrap"><table><thead><tr><th>Country</th><th>World</th><th>National FX</th><th>Other FX</th><th>Own local</th><th>Fitted total</th><th>Observed</th><th>Primary inference</th></tr></thead><tbody id="mean-table"></tbody></table></div></details>
+<div class="section"><h2>Premium contributions over time</h2>
+<div class="row"><label>Country<select id="country"></select></label><label>Display<select id="smoothing"><option value="12">Trailing 12-month averages</option><option value="1">Monthly contributions</option></select></label></div>
+<svg id="timeline" role="img" aria-label="Monthly model-implied world, national currency, other currency and local equity premium contributions"></svg>
+<div id="time-detail" class="detail"></div>
+<p id="case-note" class="muted"></p></div>
+<p class="foot">Model-implied contributions to unhedged excess returns. National FX and other FX are priced covariance components; they are not observed hedging costs. † Ordinary inference is withheld for numerically irregular fits. Ranks refer to the joint free-intercept model catalog; target comparisons use estimated-target-adjusted uncertainty.</p>
+</main>
+<script>
+const DATA=__REGIONAL_DATA__;
+const app=document.getElementById('regional-app'),ns='http://www.w3.org/2000/svg';
+const el=id=>document.getElementById(id),controls={currency:el('currency'),covariance:el('covariance'),model:el('model'),country:el('country'),smoothing:el('smoothing')};
+Object.entries(DATA.models).forEach(([v,label])=>{const o=document.createElement('option');o.value=v;o.textContent=label;controls.model.append(o)});controls.model.value='5';
+DATA.order.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=DATA.countries[c];controls.country.append(o)});controls.country.value='HU';
+const compColors=['var(--w)','var(--n)','var(--o)','var(--l)'];
+function node(tag,attrs={},parent){const n=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));if(parent)parent.append(n);return n}
+function text(parent,x,y,value,attrs={}){const n=node('text',{x,y,...attrs},parent);n.textContent=value;return n}
+function fmt(x,d=3){return Number(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function current(c){return DATA.cases[`${controls.model.value}/${controls.currency.value}/${controls.covariance.value}/${c}`]}
+function means(c){const a=current(c).series;return DATA.components.map((_,i)=>a.reduce((s,r)=>s+r[i],0)/a.length)}
+function averageChart(){
+ const svg=el('averages'),W=Math.max(280,svg.clientWidth),H=302,left=W<500?85:102,right=32,top=20,bottom=45;svg.replaceChildren();svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+ const m=DATA.order.map(c=>means(c));let lo=0,hi=0;
+ m.forEach((a,i)=>{lo=Math.min(lo,a.filter(x=>x<0).reduce((s,x)=>s+x,0),current(DATA.order[i]).observed);hi=Math.max(hi,a.filter(x=>x>0).reduce((s,x)=>s+x,0),current(DATA.order[i]).observed)});
+ const pad=Math.max((hi-lo)*.08,.08);lo-=pad;hi+=pad;const X=x=>left+(x-lo)/(hi-lo)*(W-left-right),dy=(H-top-bottom)/5;
+ for(let j=0;j<5;j++){const v=lo+j*(hi-lo)/4;node('line',{x1:X(v),x2:X(v),y1:top,y2:H-bottom,class:'axis'},svg);text(svg,X(v),H-20,fmt(v,1),{'text-anchor':'middle'})}
+ node('line',{x1:X(0),x2:X(0),y1:top,y2:H-bottom,class:'zero'},svg);
+ DATA.order.forEach((c,i)=>{const y=top+dy*(i+.5);text(svg,left-10,y+4,DATA.countries[c]+(current(c).ready?'':' †'),{'text-anchor':'end',class:'country','font-weight':c==='HU'?'600':'400'});let pos=0,neg=0;
+  m[i].forEach((v,j)=>{const base=v>=0?pos:neg;const rect=node('rect',{x:Math.min(X(base),X(base+v)),y:y-11,width:Math.max(Math.abs(X(base+v)-X(base)),.3),height:22,fill:compColors[j],opacity:.9},svg);const label=`${DATA.countries[c]} · ${DATA.labels[DATA.components[j]]}: ${fmt(v)} monthly log pp`;node('title',{},rect).textContent=label;rect.addEventListener('pointerenter',()=>el('bar-detail').textContent=label);if(v>=0)pos+=v;else neg+=v});
+  const total=m[i].reduce((s,v)=>s+v,0),tx=X(total);node('path',{d:`M${tx},${y-5}l5,5l-5,5l-5,-5Z`,fill:'var(--fg)'},svg);node('circle',{cx:X(current(c).observed),cy:y,r:4.6,fill:'var(--bg)',stroke:'var(--fg)','stroke-width':1.2},svg);
+ });
+ text(svg,(left+W-right)/2,H-1,'Monthly log percentage points',{'text-anchor':'middle'});
+ const count=DATA.order.filter(c=>current(c).ready).length;el('availability').textContent=`Usable primary inference: ${count}/5 country fits. † marks withheld inference; all point estimates remain visible.`;
+ el('bar-detail').textContent='';const body=el('mean-table');body.replaceChildren();DATA.order.forEach((c,i)=>{const tr=document.createElement('tr');const vals=[DATA.countries[c],...m[i].map(v=>fmt(v)),fmt(m[i].reduce((s,v)=>s+v,0)),fmt(current(c).observed),current(c).ready?'Available':'Withheld'];vals.forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});body.append(tr)});
+}
+function timeline(){
+ const c=controls.country.value,item=current(c),windowN=Number(controls.smoothing.value),svg=el('timeline'),W=Math.max(280,svg.clientWidth),H=294,left=49,right=15,top=18,bottom=38;
+ const values=item.series.map((row,t)=>t<windowN-1?null:row.map((_,j)=>item.series.slice(t-windowN+1,t+1).reduce((s,r)=>s+r[j],0)/windowN));
+ let lo=0,hi=0;values.filter(Boolean).forEach(row=>row.forEach(v=>{lo=Math.min(lo,v);hi=Math.max(hi,v)}));const pad=Math.max((hi-lo)*.1,.025);lo-=pad;hi+=pad;
+ const X=i=>left+i/143*(W-left-right),Y=v=>H-bottom-(v-lo)/(hi-lo)*(H-top-bottom);svg.replaceChildren();svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+ for(let j=0;j<5;j++){const v=lo+j*(hi-lo)/4;node('line',{x1:left,x2:W-right,y1:Y(v),y2:Y(v),class:'axis'},svg);text(svg,left-8,Y(v)+4,fmt(v,1),{'text-anchor':'end'})}
+ node('line',{x1:left,x2:W-right,y1:Y(0),y2:Y(0),class:'zero'},svg);
+ [3,63,135].forEach((i,k)=>text(svg,X(i),H-13,['2015','2020','2026'][k],{'text-anchor':'middle'}));
+ DATA.components.forEach((_,j)=>{const path=values.map((row,i)=>row?`${i===windowN-1?'M':'L'}${X(i).toFixed(2)},${Y(row[j]).toFixed(2)}`:'').join('');node('path',{d:path,fill:'none',stroke:compColors[j],'stroke-width':1.7},svg)});
+ const hover=node('g',{'pointer-events':'none'},svg),line=node('line',{x1:X(143),x2:X(143),y1:top,y2:H-bottom,stroke:'var(--muted)','stroke-width':.7,'stroke-dasharray':'3 3'},hover);
+ const dots=compColors.map(color=>node('circle',{r:3,fill:color},hover));
+ function detail(i){if(!values[i])i=windowN-1;line.setAttribute('x1',X(i));line.setAttribute('x2',X(i));dots.forEach((n,j)=>{n.setAttribute('cx',X(i));n.setAttribute('cy',Y(values[i][j]))});el('time-detail').textContent=`${DATA.months[i]} · `+DATA.components.map((a,j)=>`${DATA.labels[a]} ${fmt(values[i][j])}`).join(' · ')+` · total ${fmt(values[i].reduce((s,v)=>s+v,0))} log pp`}
+ const overlay=node('rect',{x:left,y:top,width:W-left-right,height:H-top-bottom,fill:'transparent'},svg);overlay.addEventListener('pointermove',ev=>{const box=svg.getBoundingClientRect(),px=(ev.clientX-box.left)*W/box.width;detail(Math.max(windowN-1,Math.min(143,Math.round((px-left)/(W-left-right)*143))))});detail(143);
+ const ranks=item.AICrank===null?'Estimated-target-adjusted uncertainty.':`AIC rank ${item.AICrank}/10; BIC rank ${item.BICrank}/10 in the joint free-intercept catalog.`;
+ el('case-note').textContent=`${DATA.countries[c]} · ${controls.currency.value} investor · ${controls.covariance.options[controls.covariance.selectedIndex].text}. ${ranks} Primary inference: ${item.ready?'available':item.reason}.`;
+}
+function render(){averageChart();timeline()}
+Object.values(controls).forEach(n=>n.addEventListener('change',render));let resizeTimer;new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(render,80)}).observe(app);render();
+</script></body></html>
